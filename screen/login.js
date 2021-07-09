@@ -1,14 +1,14 @@
 import axios from 'axios'
 import React, { useContext, useState } from 'react'
 import { StyleSheet, View, TextInput, Button } from 'react-native'
+import  {UserContext}  from '../App'
 
 export default function Login({navigation}) {
     console.log(navigation)
-    const key = 'authToken'
     const keyUser = 'user'
-    const [email, setemail] = useState('')
-    const [pwd, setpwd] = useState('')
-    const context = useContext
+    const [email, setemail] = useState('user@ex.com')
+    const [pwd, setpwd] = useState('1234')
+    const context = useContext(UserContext)
     
     const handlePress = () => {
         console.log('login')
@@ -16,17 +16,24 @@ export default function Login({navigation}) {
             identifier : email,
             password : pwd
         }
-        const url = 'https://localhost:1337/auth/local'
-        axios.post(url, data)
+        const url = 'http://172.20.10.3:3000/login?' + 'email=' + email + '&password=' + pwd
+        console.log(url)
+        navigation.replace('home')
+        console.log(axios.get(url))
+        axios.get(url)
         .then((response) => {
-            const { jwt, user } = response.data
+            //console.log(response)
+            /*/const { jwt, user } = response.data
             AsyncStorage.setItem(key, jwt)
             AsyncStorage.setItem(keyUser, JSON.stringify(user))
-            axios.defaults.headers['Authorization'] = 'Bearer' + jwt
-            context.setUser(user)
-            navigation.replace('home')
+            axios.defaults.headers['Authorization'] = 'Bearer' + jwt*/
+            //context.setUser(response.data)
+            //console.log(response.data)
+            console.log('test')
+            //navigation.replace('home')
         }) 
         .catch(function (error) {
+            console.log('test1')
             if (error.response) {
               // The request was made and the server responded with a status code
               // that falls out of the range of 2xx
@@ -71,10 +78,11 @@ const styles = StyleSheet.create({
     base : {
         margin : 20,
         height : 50,
-
     },
-    border : {
-        borderColor : 'black',
-        borderWidth : ''
+    button: {
+        borderColor: '#00F',
+        backgroundColor: '#00F',
+        width: '100%',
+        textDecorationColor: '#FFF',
     }
 });
